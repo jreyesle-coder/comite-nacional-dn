@@ -7,7 +7,7 @@ export default function Logo() {
 
   if (error) {
     return (
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xs font-bold text-prm-700">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gold-400 bg-prm-800 text-xs font-bold text-gold-100">
         PRM
       </div>
     );

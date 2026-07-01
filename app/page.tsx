@@ -33,7 +33,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-prm-50">
-      <header className="bg-prm-700">
+      <header className="border-b-4 border-gold-400 bg-prm-700">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-5">
           <Logo />
           <div>
