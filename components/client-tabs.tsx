@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { CANDIDATOS, candidatoPorCodigo } from "@/lib/candidatos";
 import { login, logout, updatePreferencia } from "@/app/actions";
+import Dashboard from "@/components/dashboard";
 
 export interface Dirigente {
   id: number;
@@ -24,7 +25,7 @@ interface Props {
 type PendingChange = { id: number; preferencia: string | null };
 
 export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
-  const [tab, setTab] = useState<"32" | "172">("32");
+  const [tab, setTab] = useState<"dashboard" | "32" | "172">("dashboard");
   const [rows32, setRows32] = useState(los32);
   const [rows172, setRows172] = useState(los172);
   const [authed, setAuthed] = useState(initialAuthed);
@@ -32,8 +33,8 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const rows = tab === "32" ? rows32 : rows172;
-  const setRows = tab === "32" ? setRows32 : setRows172;
+  const rows = tab === "172" ? rows172 : rows32;
+  const setRows = tab === "172" ? setRows172 : setRows32;
 
   function applyLocal(id: number, preferencia: string | null) {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, preferencia } : r)));
@@ -80,11 +81,14 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <div className="flex gap-2">
+          <TabButton active={tab === "dashboard"} onClick={() => setTab("dashboard")}>
+            Dashboard
+          </TabButton>
           <TabButton active={tab === "32"} onClick={() => setTab("32")}>
-            Comité de los 32 ({rows32.length})
+            Comité de los 32
           </TabButton>
           <TabButton active={tab === "172"} onClick={() => setTab("172")}>
-            Comité de los 172 ({rows172.length})
+            Comité de los 172
           </TabButton>
         </div>
         {authed ? (
@@ -102,7 +106,11 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
         )}
       </div>
 
-      <ComiteTabla rows={rows} onChange={requestChange} disabled={isPending} />
+      {tab === "dashboard" ? (
+        <Dashboard los32={rows32} los172={rows172} />
+      ) : (
+        <ComiteTabla rows={rows} onChange={requestChange} disabled={isPending} />
+      )}
 
       {pending && (
         <PasswordModal
