@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { isAuthed } from "@/lib/auth";
 import ClientTabs, { Dirigente } from "@/components/client-tabs";
+import Logo from "@/components/logo";
 
 export const dynamic = "force-dynamic";
 
@@ -31,16 +32,23 @@ export default async function Home() {
   const los172 = dirigentes.filter((d) => d.grupo === "172");
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-neutral-900">
-          Comité Nacional PRM &mdash; Distrito Nacional
-        </h1>
-        <p className="mt-1 text-sm text-neutral-600">
-          Consulta de dirigentes y preferencia presidencial
-        </p>
+    <div className="min-h-screen bg-prm-50">
+      <header className="bg-prm-700">
+        <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-5">
+          <Logo />
+          <div>
+            <h1 className="text-2xl font-bold text-white">
+              Comité Nacional PRM &mdash; Distrito Nacional
+            </h1>
+            <p className="mt-1 text-sm text-prm-100">
+              Consulta de dirigentes y preferencia presidencial
+            </p>
+          </div>
+        </div>
       </header>
-      <ClientTabs los32={los32} los172={los172} initialAuthed={authed} />
-    </main>
+      <main className="mx-auto max-w-6xl px-4 py-8">
+        <ClientTabs los32={los32} los172={los172} initialAuthed={authed} />
+      </main>
+    </div>
   );
 }

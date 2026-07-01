@@ -132,8 +132,8 @@ function TabButton({
       onClick={onClick}
       className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
         active
-          ? "bg-neutral-900 text-white"
-          : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+          ? "bg-prm-700 text-white"
+          : "bg-prm-100 text-prm-700 hover:bg-prm-200"
       }`}
     >
       {children}
@@ -200,30 +200,32 @@ function ComiteTabla({
         placeholder="Buscar por nombre, cargo o ubicación..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="mb-4 w-full max-w-md rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-500 focus:outline-none"
+        className="mb-4 w-full max-w-md rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-prm-500 focus:outline-none focus:ring-1 focus:ring-prm-500"
       />
 
-      <div className="overflow-x-auto rounded-md border border-neutral-200">
+      <div className="overflow-x-auto rounded-md border border-prm-200">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
+          <thead className="bg-prm-50 text-left text-xs uppercase text-prm-700">
             <tr>
               <th className="px-3 py-2">#</th>
               <th className="px-3 py-2">Nombre</th>
               <th className="px-3 py-2">Cargo</th>
               {showCedula && <th className="px-3 py-2">Cédula</th>}
-              {showUbicacion && <th className="px-3 py-2">Ubicación</th>}
+              {showUbicacion && <th className="min-w-[16rem] px-3 py-2">Ubicación</th>}
               <th className="px-3 py-2">Preferencia</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((r) => (
-              <tr key={r.id} className="border-t border-neutral-100 hover:bg-neutral-50">
+              <tr key={r.id} className="border-t border-neutral-100 hover:bg-prm-50/40">
                 <td className="px-3 py-2 text-neutral-400">{r.numero_orden}</td>
                 <td className="px-3 py-2 font-medium text-neutral-900">{r.nombre}</td>
                 <td className="px-3 py-2 text-neutral-600">{r.cargo}</td>
                 {showCedula && <td className="px-3 py-2 text-neutral-500">{r.cedula}</td>}
                 {showUbicacion && (
-                  <td className="px-3 py-2 text-neutral-500">{r.ubicacion}</td>
+                  <td className="min-w-[16rem] whitespace-normal px-3 py-2 text-neutral-500">
+                    {r.ubicacion}
+                  </td>
                 )}
                 <td className="px-3 py-2">
                   <select
@@ -291,7 +293,7 @@ function PasswordModal({
             autoFocus
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-500 focus:outline-none"
+            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm focus:border-prm-500 focus:outline-none focus:ring-1 focus:ring-prm-500"
             placeholder="Contraseña"
           />
           {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
@@ -305,7 +307,7 @@ function PasswordModal({
             </button>
             <button
               type="submit"
-              className="rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700"
+              className="rounded-md bg-prm-700 px-4 py-2 text-sm font-medium text-white hover:bg-prm-800"
             >
               Entrar
             </button>
