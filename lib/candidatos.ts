@@ -1,4 +1,4 @@
-export type CodigoCandidato = "DC" | "CM" | "WA" | "GG" | "YL" | "TP";
+export type CodigoCandidato = "DC" | "CM" | "WA" | "GG" | "YL" | "TP" | "RP";
 
 export interface Candidato {
   codigo: CodigoCandidato;
@@ -14,6 +14,7 @@ export const CANDIDATOS: Candidato[] = [
   { codigo: "GG", nombre: "Guido Gómez", color: "bg-amber-100 text-amber-800 border-amber-300", hex: "#d97706" },
   { codigo: "YL", nombre: "Yayo Sanz Lovatón", color: "bg-purple-100 text-purple-800 border-purple-300", hex: "#7c3aed" },
   { codigo: "TP", nombre: "Tony Peña", color: "bg-orange-100 text-orange-800 border-orange-300", hex: "#ea580c" },
+  { codigo: "RP", nombre: "Raquel Peña", color: "bg-red-100 text-red-800 border-red-300", hex: "#dc2626" },
 ];
 
 export const SIN_DEFINIR_HEX = "#9ca3af";

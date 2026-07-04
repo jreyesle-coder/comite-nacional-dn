@@ -53,7 +53,10 @@ Abre [http://localhost:3000](http://localhost:3000).
   en PDF (170 registros validados al momento de la extracción; nombre, cargo, ubicación).
 - La columna `preferencia` solo acepta los códigos: `DC` (David Collado),
   `CM` (Carolina Mejía), `WA` (Wellington Arnaud), `GG` (Guido Gómez),
-  `YL` (Yayo Sanz Lovatón), `TP` (Tony Peña).
+  `YL` (Yayo Sanz Lovatón), `TP` (Tony Peña), `RP` (Raquel Peña).
+  Si se agrega un nuevo precandidato, hay que actualizar `lib/candidatos.ts`
+  y correr una migración que amplíe el `check` de la columna `preferencia`
+  (ver [`supabase/migrations/0002_add_raquel_pena.sql`](supabase/migrations/0002_add_raquel_pena.sql) como ejemplo).
 - Si llegan padrones nuevos de otras provincias, se pueden agregar con el mismo
   patrón de `insert into public.dirigentes (...) values (...) on conflict (grupo, numero_orden) do nothing;`
   usando un valor de `grupo` nuevo o reutilizando `32`/`172` con `numero_orden` distinto.
