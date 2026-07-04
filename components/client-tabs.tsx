@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { RefreshCw } from "lucide-react";
+import { Download, RefreshCw } from "lucide-react";
 import { CANDIDATOS, candidatoPorCodigo } from "@/lib/candidatos";
 import { getDirigentes, login, logout, updatePreferencia } from "@/app/actions";
 import Dashboard from "@/components/dashboard";
@@ -118,6 +118,14 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
             <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
             {isRefreshing ? "Refrescando..." : "Refrescar"}
           </button>
+          <a
+            href="/api/export"
+            title="Descargar Excel con los datos actuales"
+            className="inline-flex items-center gap-1.5 rounded-md border border-prm-300 bg-white px-3 py-1.5 text-xs font-medium text-prm-700 transition-colors hover:bg-prm-50"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Descargar Excel
+          </a>
           {authed ? (
             <button
               onClick={() => {
