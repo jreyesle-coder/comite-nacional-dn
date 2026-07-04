@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Download, RefreshCw } from "lucide-react";
 import { CANDIDATOS, candidatoPorCodigo } from "@/lib/candidatos";
 import { getDirigentes, login, logout, updatePreferencia } from "@/app/actions";
@@ -35,9 +35,27 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
   const [isPending, startTransition] = useTransition();
   const [isRefreshing, startRefresh] = useTransition();
   const [refreshError, setRefreshError] = useState<string | null>(null);
+  const isPendingRef = useRef(isPending);
+  isPendingRef.current = isPending;
 
   const rows = tab === "172" ? rows172 : rows32;
   const setRows = tab === "172" ? setRows172 : setRows32;
+
+  function applyServerData(data: Dirigente[]) {
+    setRows32(data.filter((d) => d.grupo === "32"));
+    setRows172(data.filter((d) => d.grupo === "172"));
+  }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (document.visibilityState !== "visible" || isPendingRef.current) return;
+      const res = await getDirigentes();
+      if (res.ok) {
+        applyServerData(res.data as Dirigente[]);
+      }
+    }, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   function applyLocal(id: number, preferencia: string | null) {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, preferencia } : r)));
@@ -67,9 +85,7 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
         setRefreshError(res.error ?? "No se pudo refrescar");
         return;
       }
-      const data = res.data as Dirigente[];
-      setRows32(data.filter((d) => d.grupo === "32"));
-      setRows172(data.filter((d) => d.grupo === "172"));
+      applyServerData(res.data as Dirigente[]);
     });
   }
 
