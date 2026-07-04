@@ -112,8 +112,8 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex gap-2">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-y-2">
+        <div className="flex flex-wrap gap-2">
           <TabButton active={tab === "dashboard"} onClick={() => setTab("dashboard")}>
             Dashboard
           </TabButton>
@@ -124,7 +124,7 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
             Comité de los 172
           </TabButton>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
