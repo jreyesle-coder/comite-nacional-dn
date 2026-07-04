@@ -203,13 +203,18 @@ export async function GET() {
       });
     });
 
-    ws.dataValidations.add(`${prefColLetter}2:${prefColLetter}${n + 1}`, {
-      type: "list",
-      allowBlank: true,
-      formulae: [listaRange],
-      error: "Selecciona un código válido de la lista",
-      errorTitle: "Valor inválido",
-    });
+    // exceljs soporta `dataValidations.add()` para un rango en tiempo de ejecución,
+    // pero sus typings no lo declaran en Worksheet; se castea puntualmente aquí.
+    (ws as unknown as { dataValidations: { add(ref: string, dv: ExcelJS.DataValidation): void } }).dataValidations.add(
+      `${prefColLetter}2:${prefColLetter}${n + 1}`,
+      {
+        type: "list",
+        allowBlank: true,
+        formulae: [listaRange],
+        error: "Selecciona un código válido de la lista",
+        errorTitle: "Valor inválido",
+      }
+    );
 
     ws.addConditionalFormatting({
       ref: `A2:${colLetter(headers.length)}${n + 1}`,
@@ -271,8 +276,6 @@ export async function GET() {
     "E",
     "F"
   );
-
-  workbook.views = [{ activeTab: 0 }];
 
   const buffer = await workbook.xlsx.writeBuffer();
 
