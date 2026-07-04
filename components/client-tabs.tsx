@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { RefreshCw } from "lucide-react";
 import { CANDIDATOS, candidatoPorCodigo } from "@/lib/candidatos";
-import { login, logout, updatePreferencia } from "@/app/actions";
+import { getDirigentes, login, logout, updatePreferencia } from "@/app/actions";
 import Dashboard from "@/components/dashboard";
 
 export interface Dirigente {
@@ -32,6 +33,8 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
   const [pending, setPending] = useState<PendingChange | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isRefreshing, startRefresh] = useTransition();
+  const [refreshError, setRefreshError] = useState<string | null>(null);
 
   const rows = tab === "172" ? rows172 : rows32;
   const setRows = tab === "172" ? setRows172 : setRows32;
@@ -53,6 +56,20 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
         applyLocal(id, rows.find((r) => r.id === id)?.preferencia ?? null);
         setPasswordError(res.error ?? "No se pudo guardar el cambio");
       }
+    });
+  }
+
+  function handleRefresh() {
+    setRefreshError(null);
+    startRefresh(async () => {
+      const res = await getDirigentes();
+      if (!res.ok) {
+        setRefreshError(res.error ?? "No se pudo refrescar");
+        return;
+      }
+      const data = res.data as Dirigente[];
+      setRows32(data.filter((d) => d.grupo === "32"));
+      setRows172(data.filter((d) => d.grupo === "172"));
     });
   }
 
@@ -91,20 +108,35 @@ export default function ClientTabs({ los32, los172, initialAuthed }: Props) {
             Comité de los 172
           </TabButton>
         </div>
-        {authed ? (
+        <div className="flex items-center gap-3">
           <button
-            onClick={() => {
-              logout();
-              setAuthed(false);
-            }}
-            className="text-xs text-neutral-500 underline hover:text-neutral-800"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            title="Refrescar resultados"
+            className="inline-flex items-center gap-1.5 rounded-md border border-prm-300 bg-white px-3 py-1.5 text-xs font-medium text-prm-700 transition-colors hover:bg-prm-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Cerrar edición
+            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+            {isRefreshing ? "Refrescando..." : "Refrescar"}
           </button>
-        ) : (
-          <span className="text-xs text-neutral-400">Modo solo lectura</span>
-        )}
+          {authed ? (
+            <button
+              onClick={() => {
+                logout();
+                setAuthed(false);
+              }}
+              className="text-xs text-neutral-500 underline hover:text-neutral-800"
+            >
+              Cerrar edición
+            </button>
+          ) : (
+            <span className="text-xs text-neutral-400">Modo solo lectura</span>
+          )}
+        </div>
       </div>
+
+      {refreshError && (
+        <p className="mb-4 text-xs text-red-600">{refreshError}</p>
+      )}
 
       {tab === "dashboard" ? (
         <Dashboard los32={rows32} los172={rows172} />
